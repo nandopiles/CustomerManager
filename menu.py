@@ -1,9 +1,10 @@
 import os
+import helpers
 
 
 def start():
     while True:
-        os.system("clear")
+        helpers.clean_screen()
 
         print("===================================")
         print("  Welcome to the Customer Manager  ")
@@ -17,7 +18,7 @@ def start():
         print("===================================")
 
         option = input("> ")
-        os.system("clear")
+        helpers.clean_screen()
 
         if option == "1":
             print("Listing clients...\n")
