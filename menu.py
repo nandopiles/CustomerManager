@@ -27,30 +27,43 @@ def start():
 
         elif option == "2":
             print("Searching client...\n")
-            dni = helpers.read_text(3, 3, "DNI (2 int, 1 char)").upper()
+            dni = None
+            while True:
+                dni = helpers.read_text(3, 3, "[-] DNI (2 int, 1 char)").upper()
+                if helpers.dni_validate(dni, db.Clients.clientsList):
+                    break
             client = db.Clients.search(dni)
             print(client) if client else print("[-] Client not found")
 
         elif option == "3":
             print("Adding client...\n")
-            dni = helpers.read_text(3, 3, "DNI (2 int, 1 char)").upper()
-            name = helpers.read_text(2, 30, "Name (from 2 to 30 chars)").capitalize()
+            dni = None
+            while True:
+                dni = helpers.read_text(3, 3, "[-] DNI (2 int, 1 char)").upper()
+                if helpers.dni_validate(dni, db.Clients.clientsList):
+                    break
+
+            name = helpers.read_text(2, 30, "[-] Name (from 2 to 30 chars)").capitalize()
             surname = helpers.read_text(
-                2, 30, "Surname (from 2 to 30 chars)"
+                2, 30, "[-] Surname (from 2 to 30 chars)"
             ).capitalize()
             db.Clients.add(dni, name, surname)
             print("[+] Client added correctly")
 
         elif option == "4":
             print("Modifying client...\n")
-            dni = helpers.read_text(3, 3, "DNI (2 int, 1 char)").upper()
+            dni = None
+            while True:
+                dni = helpers.read_text(3, 3, "[-] DNI (2 int, 1 char)").upper()
+                if helpers.dni_validate(dni, db.Clients.clientsList):
+                    break
             client = db.Clients.search(dni)
             if client:
                 name = helpers.read_text(
-                    2, 30, f"Name (from 2 to 30 chars) [{client.name}]"
+                    2, 30, f"[-] Name (from 2 to 30 chars) [{client.name}]"
                 ).capitalize()
                 surname = helpers.read_text(
-                    2, 30, f"Surname (from 2 to 30 chars) [{client.surname}]"
+                    2, 30, f"[-] Surname (from 2 to 30 chars) [{client.surname}]"
                 ).capitalize()
                 db.Clients.modify(client.dni, name, surname)
                 print("[+] Client modified")
@@ -59,7 +72,11 @@ def start():
 
         elif option == "5":
             print("Deleting client...\n")
-            dni = helpers.read_text(3, 3, "DNI (2 int, 1 char)").upper()
+            dni = None
+            while True:
+                dni = helpers.read_text(3, 3, "[-] DNI (2 int, 1 char)").upper()
+                if helpers.dni_validate(dni, db.Clients.clientsList):
+                    break
             (
                 print("[+] Client deleted correctly")
                 if db.Clients.delete(dni)

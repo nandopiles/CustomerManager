@@ -14,6 +14,8 @@ def read_text(length_min=0, length_max=100, message=None):
         text = input("> ")
         if len(text) >= length_min and len(text) <= length_max:
             return text
+        else:
+            print(message)
 
 
 def dni_validate(dni, clientsList):

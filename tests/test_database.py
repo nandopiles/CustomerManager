@@ -1,5 +1,6 @@
 import copy
 import unittest
+import helpers
 import database as db
 
 
@@ -39,3 +40,9 @@ class TestDabase(unittest.TestCase):
 
         self.assertEqual(deleted_client.dni, "37K")
         self.assertIsNone(searched_client)
+
+    def test_dni_validate(self):
+        self.assertTrue(helpers.dni_validate("00X", db.Clients.clientsList))
+        self.assertFalse(helpers.dni_validate("123214A", db.Clients.clientsList))
+        self.assertFalse(helpers.dni_validate("F45", db.Clients.clientsList))
+        self.assertFalse(helpers.dni_validate("37K", db.Clients.clientsList))
