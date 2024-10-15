@@ -1,0 +1,41 @@
+import copy
+import unittest
+import database as db
+
+
+class TestDabase(unittest.TestCase):
+    def setUp(self):
+        db.Clients.clientsList = [
+            db.Client("37K", "Kasandra", "Salvador"),
+            db.Client("23L", "Maria", "Calatayud"),
+            db.Client("94S", "Marcos", "Herrero"),
+        ]
+
+    def test_search_client(self):
+        existing_customer = db.Clients.search("37K")
+        nonexisting_customer = db.Clients.search("11A")
+
+        self.assertIsNotNone(existing_customer)
+        self.assertIsNone(nonexisting_customer)
+
+    def test_add_client(self):
+        new_client = db.Clients.add("49L", "Test", "Test")
+
+        self.assertEqual(len(db.Clients.clientsList), 4)
+        self.assertEqual(new_client.dni, "49L")
+        self.assertEqual(new_client.name, "Test")
+        self.assertEqual(new_client.surname, "Test")
+
+    def test_modify_client(self):
+        client_to_modify = copy.copy(db.Clients.search("37K"))
+        modified_client = db.Clients.modify("37K", "Manola", "Vasos")
+
+        self.assertEqual(client_to_modify.name, "Kasandra")
+        self.assertEqual(modified_client.name, "Manola")
+
+    def test_delete_client(self):
+        deleted_client = db.Clients.delete("37K")
+        searched_client = db.Clients.search("37K")
+
+        self.assertEqual(deleted_client.dni, "37K")
+        self.assertIsNone(searched_client)
