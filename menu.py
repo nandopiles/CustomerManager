@@ -1,5 +1,5 @@
-import os
 import helpers
+import database as db
 
 
 def start():
@@ -22,14 +22,50 @@ def start():
 
         if option == "1":
             print("Listing clients...\n")
+            for client in db.Clients.clientsList:
+                print(client)
+
         elif option == "2":
             print("Searching client...\n")
+            dni = helpers.read_text(3, 3, "DNI (2 int, 1 char)").upper()
+            client = db.Clients.search(dni)
+            print(client) if client else print("[-] Client not found")
+
         elif option == "3":
             print("Adding client...\n")
+            dni = helpers.read_text(3, 3, "DNI (2 int, 1 char)").upper()
+            name = helpers.read_text(2, 30, "Name (from 2 to 30 chars)").capitalize()
+            surname = helpers.read_text(
+                2, 30, "Surname (from 2 to 30 chars)"
+            ).capitalize()
+            db.Clients.add(dni, name, surname)
+            print("[+] Client added correctly")
+
         elif option == "4":
             print("Modifying client...\n")
+            dni = helpers.read_text(3, 3, "DNI (2 int, 1 char)").upper()
+            client = db.Clients.search(dni)
+            if client:
+                name = helpers.read_text(
+                    2, 30, f"Name (from 2 to 30 chars) [{client.name}]"
+                ).capitalize()
+                surname = helpers.read_text(
+                    2, 30, f"Surname (from 2 to 30 chars) [{client.surname}]"
+                ).capitalize()
+                db.Clients.modify(client.dni, name, surname)
+                print("[+] Client modified")
+            else:
+                print("[-] Client not found")
+
         elif option == "5":
             print("Deleting client...\n")
+            dni = helpers.read_text(3, 3, "DNI (2 int, 1 char)").upper()
+            (
+                print("[+] Client deleted correctly")
+                if db.Clients.delete(dni)
+                else print("[-] Client not found")
+            )
+
         elif option == "6":
             break
 
