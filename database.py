@@ -21,6 +21,7 @@ class Clients:
     def add(dni, name, surname):
         client = Client(dni, name, surname)
         Clients.clientsList.append(client)
+
         return client
 
     @staticmethod
