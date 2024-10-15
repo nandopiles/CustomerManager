@@ -1,3 +1,4 @@
+import re
 import os
 import platform
 
@@ -13,3 +14,14 @@ def read_text(length_min=0, length_max=100, message=None):
         text = input("> ")
         if len(text) >= length_min and len(text) <= length_max:
             return text
+
+
+def dni_validate(dni, clientsList):
+    if not re.match("[0-9]{2}[A-Z]$", dni):
+        print("[-] Incorrect DNI")
+        return False
+    for client in clientsList:
+        if client.dni == dni:
+            print("[-] This DNI is already in use")
+            return False
+    return True
