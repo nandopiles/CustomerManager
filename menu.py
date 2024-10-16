@@ -55,16 +55,19 @@ def start():
 
         elif option == "4":
             print("Modifying client...\n")
+            print("Introduce DNI to modify:")
             dni = None
             while True:
                 dni = helpers.read_text(3, 3, "[-] DNI (2 int, 1 char)").upper()
-                if helpers.dni_validate(dni, db.Clients.clientsList):
+                if helpers.dni_validate(dni):
                     break
             client = db.Clients.search(dni)
             if client:
+                print("Introduce name:")
                 name = helpers.read_text(
                     2, 30, f"[-] Name (from 2 to 30 chars) [{client.name}]"
                 ).capitalize()
+                print("Introduce surname:")
                 surname = helpers.read_text(
                     2, 30, f"[-] Surname (from 2 to 30 chars) [{client.surname}]"
                 ).capitalize()
@@ -75,10 +78,11 @@ def start():
 
         elif option == "5":
             print("Deleting client...\n")
+            print("Introduce DNI to modify:")
             dni = None
             while True:
                 dni = helpers.read_text(3, 3, "[-] DNI (2 int, 1 char)").upper()
-                if helpers.dni_validate(dni, db.Clients.clientsList):
+                if helpers.dni_validate(dni):
                     break
             (
                 print("[+] Client deleted correctly")
