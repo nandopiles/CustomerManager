@@ -8,22 +8,28 @@ def clean_screen():
 
 
 def read_text(length_min=0, length_max=100, message=None):
-    print(message) if message else None
-
     while True:
         text = input("> ")
-        if len(text) >= length_min and len(text) <= length_max:
+        if length_min <= len(text) <= length_max:
             return text
         else:
             print(message)
 
 
-def dni_validate(dni, clientsList):
+def dni_validate(dni):
     if not re.match("[0-9]{2}[A-Z]$", dni):
-        print("[-] Incorrect DNI")
+        print("[-] Incorrect DNI format")
         return False
-    for client in clientsList:
-        if client.dni == dni:
-            print("[-] This DNI is already in use")
-            return False
     return True
+
+
+def ultimate_dni_validate(dni, clientsList):
+    basic_validation = dni_validate(dni)
+    if basic_validation:
+        for client in clientsList:
+            if client.dni == dni:
+                print("[-] This DNI is already in use")
+                return False
+        return True
+    else:
+        return False

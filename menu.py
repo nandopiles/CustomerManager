@@ -27,10 +27,11 @@ def start():
 
         elif option == "2":
             print("Searching client...\n")
+            print("Introduce DNI:")
             dni = None
             while True:
                 dni = helpers.read_text(3, 3, "[-] DNI (2 int, 1 char)").upper()
-                if helpers.dni_validate(dni, db.Clients.clientsList):
+                if helpers.dni_validate(dni):
                     break
             client = db.Clients.search(dni)
             print(client) if client else print("[-] Client not found")
@@ -40,10 +41,12 @@ def start():
             dni = None
             while True:
                 dni = helpers.read_text(3, 3, "[-] DNI (2 int, 1 char)").upper()
-                if helpers.dni_validate(dni, db.Clients.clientsList):
+                if helpers.ultimate_dni_validate(dni, db.Clients.clientsList):
                     break
 
-            name = helpers.read_text(2, 30, "[-] Name (from 2 to 30 chars)").capitalize()
+            name = helpers.read_text(
+                2, 30, "[-] Name (from 2 to 30 chars)"
+            ).capitalize()
             surname = helpers.read_text(
                 2, 30, "[-] Surname (from 2 to 30 chars)"
             ).capitalize()
