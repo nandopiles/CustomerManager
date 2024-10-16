@@ -1,6 +1,8 @@
 import copy
 import unittest
 import helpers
+import config
+import csv
 import database as db
 
 
@@ -49,5 +51,20 @@ class TestDabase(unittest.TestCase):
     def test_ultimate_dni_validate(self):
         self.assertTrue(helpers.ultimate_dni_validate("56F", db.Clients.clientsList))
         self.assertFalse(helpers.ultimate_dni_validate("37K", db.Clients.clientsList))
-        self.assertFalse(helpers.ultimate_dni_validate("423523F", db.Clients.clientsList))
+        self.assertFalse(
+            helpers.ultimate_dni_validate("423523F", db.Clients.clientsList)
+        )
 
+    def test_write_csv(self):
+        db.Clients.delete("37K")
+        db.Clients.delete("23L")
+        db.Clients.modify("94S", "Susa", "Mama")
+
+        dni, name, surname = None, None, None
+        with open(config.DATABASE_PATH, newline="\n") as file:
+            reader = csv.reader(file, delimiter=";")
+            dni, name, surname = next(reader)
+
+        self.assertEqual(dni, "94S")
+        self.assertEqual(name, "Susa")
+        self.assertEqual(surname, "Mama")

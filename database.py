@@ -1,4 +1,5 @@
 import csv
+import config
 
 
 class Client:
@@ -13,7 +14,7 @@ class Client:
 
 class Clients:
     clientsList = []
-    with open("clients.csv", newline="\n") as file:
+    with open(config.DATABASE_PATH, newline="\n") as file:
         reader = csv.reader(file, delimiter=";")
         for dni, name, surname in reader:
             client = Client(dni, name, surname)
@@ -51,7 +52,7 @@ class Clients:
 
     @staticmethod
     def save():
-        with open("clients.csv", "w", newline="\n") as file:
+        with open(config.DATABASE_PATH, "w", newline="\n") as file:
             writer = csv.writer(file, delimiter=";")
             for client in Clients.clientsList:
                 writer.writerow((client.dni, client.name, client.surname))
