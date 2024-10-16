@@ -1,3 +1,4 @@
+import helpers
 import database as db
 from tkinter import *
 from tkinter import ttk
@@ -14,6 +15,58 @@ class CenterWidgetMixin:
         x = int(ws / 2 - w / 2)
         y = int(hs / 2 - h / 2)
         self.geometry(f"{w}x{h}+{x}+{y}")  # width x height + offset_x + offset_y
+
+
+class CreateClientWindow(Toplevel, CenterWidgetMixin):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.title("Create client")
+        self.build()
+        self.centerWindow()
+        self.transient(parent)
+        self.grab_set()
+
+    def build(self):
+        frame = Frame(self)
+        frame.pack(padx=20, pady=10)
+
+        Label(frame, text="DNI (2 ints 1 upper char)").grid(row=0, column=0)
+        Label(frame, text="Name (from 2 to 30 chars)").grid(row=0, column=1)
+        Label(frame, text="DNI (from 2 to 30 chars)").grid(row=0, column=2)
+
+        dni = Entry(frame)
+        dni.grid(row=1, column=0)
+        dni.bind("<KeyRelease>", lambda event: self.validate(event, 0))
+        name = Entry(frame)
+        name.grid(row=1, column=1)
+        name.bind("<KeyRelease>", lambda event: self.validate(event, 1))
+        surname = Entry(frame)
+        surname.grid(row=1, column=2)
+        surname.bind("<KeyRelease>", lambda event: self.validate(event, 2))
+
+        frame = Frame(self)
+        frame.pack(pady=10)
+
+        addButton = Button(frame, text="Add", command=self.add_client)
+        addButton.configure(state=DISABLED)
+        addButton.grid(row=0, column=0)
+        Button(frame, text="Cancel", command=self.close).grid(row=0, column=1)
+
+    def add_client(self):
+        pass
+
+    def close(self):
+        self.destroy()
+        self.update()
+
+    def validate(self, event, index):
+        value = event.widget.get()
+        validation = (
+            helpers.ultimate_dni_validate(value, db.Clients.clientsList)
+            if index == 0
+            else (value.isalpha() and 2 <= len(value) <= 30)
+        )
+        event.widget.configure({"bg": "Green" if validation else "Red"})
 
 
 class MainWindow(Tk, CenterWidgetMixin):
@@ -58,7 +111,7 @@ class MainWindow(Tk, CenterWidgetMixin):
         frame = Frame(self)
         frame.pack(pady=20)
 
-        Button(frame, text="Add", command=None).grid(row=0, column=0)
+        Button(frame, text="Add", command=self.create).grid(row=0, column=0)
         Button(frame, text="Modify", command=None).grid(row=0, column=1)
         Button(frame, text="Delete", command=self.delete).grid(row=0, column=2)
 
@@ -75,6 +128,9 @@ class MainWindow(Tk, CenterWidgetMixin):
             )
             if confirmation:
                 self.treeView.delete(client)
+
+    def create(self):
+        CreateClientWindow(self)
 
 
 if __name__ == "__main__":
