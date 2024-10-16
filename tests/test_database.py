@@ -42,7 +42,12 @@ class TestDabase(unittest.TestCase):
         self.assertIsNone(searched_client)
 
     def test_dni_validate(self):
-        self.assertTrue(helpers.dni_validate("00X", db.Clients.clientsList))
-        self.assertFalse(helpers.dni_validate("123214A", db.Clients.clientsList))
-        self.assertFalse(helpers.dni_validate("F45", db.Clients.clientsList))
-        self.assertFalse(helpers.dni_validate("37K", db.Clients.clientsList))
+        self.assertTrue(helpers.dni_validate("00X"))
+        self.assertFalse(helpers.dni_validate("123214A"))
+        self.assertFalse(helpers.dni_validate("F45"))
+
+    def test_ultimate_dni_validate(self):
+        self.assertTrue(helpers.ultimate_dni_validate("56F", db.Clients.clientsList))
+        self.assertFalse(helpers.ultimate_dni_validate("37K", db.Clients.clientsList))
+        self.assertFalse(helpers.ultimate_dni_validate("423523F", db.Clients.clientsList))
+
