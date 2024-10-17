@@ -7,14 +7,15 @@ from tkinter.messagebox import askokcancel, WARNING
 
 class CenterWidgetMixin:
     def centerWindow(self):
-        self.update()
-        w = self.winfo_width()
-        h = self.winfo_height()
-        ws = self.winfo_screenwidth()
-        hs = self.winfo_screenheight()
-        x = int(ws / 2 - w / 2)
-        y = int(hs / 2 - h / 2)
-        self.geometry(f"{w}x{h}+{x}+{y}")  # width x height + offset_x + offset_y
+        if isinstance(self, (Tk, Toplevel)):
+            self.update_idletasks()
+            w = self.winfo_width()
+            h = self.winfo_height()
+            ws = self.winfo_screenwidth()
+            hs = self.winfo_screenheight()
+            x = int((ws - w) / 2)
+            y = int((hs - h) / 2)
+            self.geometry(f"{w}x{h}+{x}+{y}")  # width x height + offset_x + offset_y
 
 
 class CreateClientWindow(Toplevel, CenterWidgetMixin):
@@ -52,8 +53,20 @@ class CreateClientWindow(Toplevel, CenterWidgetMixin):
         addButton.grid(row=0, column=0)
         Button(frame, text="Cancel", command=self.close).grid(row=0, column=1)
 
+        self.validations = [0, 0, 0]  # all "False"
+        self.addButton = addButton
+        self.dni = dni
+        self.name = name
+        self.surname = surname
+
     def add_client(self):
-        pass
+        self.master.treeView.insert(
+            parent="",
+            index="end",
+            iid=self.dni.get(),
+            values=(self.dni.get(), self.name.get(), self.surname.get()),
+        )
+        self.close()
 
     def close(self):
         self.destroy()
@@ -67,6 +80,11 @@ class CreateClientWindow(Toplevel, CenterWidgetMixin):
             else (value.isalpha() and 2 <= len(value) <= 30)
         )
         event.widget.configure({"bg": "Green" if validation else "Red"})
+        # change button's status looking the validations
+        self.validations[index] = validation
+        self.addButton.config(
+            state=NORMAL if self.validations == [1, 1, 1] else DISABLED
+        )
 
 
 class MainWindow(Tk, CenterWidgetMixin):
@@ -105,7 +123,6 @@ class MainWindow(Tk, CenterWidgetMixin):
                 iid=client.dni,
                 values=(client.dni, client.name, client.surname),
             )
-
         treeView.pack()
 
         frame = Frame(self)
