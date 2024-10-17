@@ -1,0 +1,6 @@
+# Basic dependencies
+tkinter  # Tkinter is included in the Python standard library, so it doesn't need to be installed separately.
+pandas   # For handling CSV files, if you are using it for data manipulation.
+pytest   # For running your unit tests.
+
+# If you have other specific libraries, include them here as well.
